@@ -39,10 +39,10 @@ public class JpaMain {
 //            }
 
             // buffer
-            Member findMember = em.find(Member.class, 1L);
-            findMember.setName("google");
-
-            em.flush();
+//            Member findMember = em.find(Member.class, 1L);
+//            findMember.setName("google");
+//
+//            em.flush();
 
             System.out.println("==========");
 
