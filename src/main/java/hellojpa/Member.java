@@ -1,37 +1,34 @@
 package hellojpa;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Date;
 
 @Entity // JPA가 인식
+@SequenceGenerator(name = "member_seq_generator", sequenceName = "member_seq")
 public class Member {
-
-    @Id
+    @Id // 직접할당
+    //@GeneratedValue(strategy = GenerationType.IDENTITY) // DB에 pk설정 위임, DB에 들어갈때 pk결정 따라서 
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_seq_generator")
     private Long id;
-    private String name;
 
-    public Member(){
+    @Column(name = "name") // DB컬럼명은 name
+    private String username;
 
-    }
+    private Integer age;
 
-    public Member(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+    @Enumerated(EnumType.STRING) // enum대신 : STRING써야 순서에 제약받지 않음
+    private RoleType roleType;
 
-    public Long getId() {
-        return id;
-    }
+    @Temporal(TemporalType.TIMESTAMP) // Time, Date, TimeStamp
+    private Date createdDate;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastModifiedDate;
 
-    public String getName() {
-        return name;
-    }
+    @Lob // 큰 컨텐츠
+    private String description;
 
-    public void setName(String name) {
-        this.name = name;
+    public Member() {
+
     }
 }
