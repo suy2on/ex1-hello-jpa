@@ -1,7 +1,9 @@
 package hellojpa;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity // JPA가 인식
 //@SequenceGenerator(name = "member_seq_generator", sequenceName = "member_seq")
@@ -22,6 +24,17 @@ public class Member {
     @ManyToOne // 다대일(member관점)
     @JoinColumn(name= "TEAM_ID") // FK는 뭔지
     private Team team;
+
+    @OneToOne
+    @JoinColumn(name = "LOCKER_ID")
+    private Locker locker;
+
+//    @ManyToMany //다대다
+//    @JoinTable(name = "MEMBER_PRODUCT") // 중개테이블
+//    private List<Product> products = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<MemberProduct> memberProducts = new ArrayList<>();
 
 //    private Integer age;
 //
