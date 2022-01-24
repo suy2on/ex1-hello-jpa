@@ -14,40 +14,33 @@ public class JpaMain {
         tx.begin();
         //code
         try {
-//            생성
-//             > 비영속
-//            Member member = new Member();
-//            member.setId(2L);
-//            member.setName("HelloB");
-//             > 영속
-//            em.persist(member);
-//            > 영속해지
-//            em.detach(member);
 
-//            조회
-//            Member findMember = em.find(Member.class, 1L);
-//            삭제
-//            em.remove(findMember);
-//            수정
-//            findMember.setName("HelloJPA");
+            Team team = new Team();
+            team.setName("TeamA");
+            em.persist(team);
 
-//              전체조회 : jpql
-//            List<Member> result = em.createQuery("select m from Member as m", Member.class)
-//                    .getResultList();
-//            for (Member member : result){
-//                System.out.println("member.name = " + member.getName());
-//            }
+            Member member = new Member();
+            member.setUsername("member1");
+            member.changeTeam(team); // 알아서 pk 를 FK로 쓴다
+            em.persist(member);
 
-            // buffer
-//            Member findMember = em.find(Member.class, 1L);
-//            findMember.setName("google");
+//          team.getMembers().add(member); // flush, clear 안하고 관계 조회할때는 꼭필요 + 객체지향적 설계
 //
-//            em.flush();
+            em.flush();
+            em.clear();
+
+            Member findMember = em.find(Member.class, member.getId());
+            List<Member> members = findMember.getTeam().getMembers();
+
+            for (Member m : members){
+                System.out.println("m = " + m.getUsername());
+            }
 
             System.out.println("==========");
 
             tx.commit(); // DB에 쿼리가 날라가는 순간
         }catch (Exception e){
+            e.printStackTrace();
             tx.rollback();
         } finally {
             em.close();
