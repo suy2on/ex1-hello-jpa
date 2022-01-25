@@ -1,13 +1,14 @@
 package hellojpa;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity // JPA가 인식
 //@SequenceGenerator(name = "member_seq_generator", sequenceName = "member_seq")
-public class Member {
+public class Member extends BaseEntity {
     @Id // 직접할당
     //@GeneratedValue(strategy = GenerationType.IDENTITY) // DB에 pk설정 위임, DB에 들어갈때 pk결정 따라서 
     // @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_seq_generator")
@@ -49,6 +50,9 @@ public class Member {
 //
 //    @Lob // 큰 컨텐츠
 //    private String description;
+
+
+
 
     public Member() {
 

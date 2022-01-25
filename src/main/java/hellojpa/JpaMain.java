@@ -1,6 +1,7 @@
 package hellojpa;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class JpaMain {
@@ -15,32 +16,30 @@ public class JpaMain {
         //code
         try {
 
-            Team team = new Team();
-            team.setName("TeamA");
-            em.persist(team);
+//            Movie movie = new Movie();
+//            movie.setDirector("A");
+//            movie.setActor("BBB");
+//            movie.setName("바함사");
+//            movie.setPrice(10000);
 
             Member member = new Member();
-            member.setUsername("member1");
-            member.changeTeam(team); // 알아서 pk 를 FK로 쓴다
+            member.setUsername("A");
+            member.setCreatedBy("B");
+            member.setCreatedDate(LocalDateTime.now());
+
             em.persist(member);
 
-//          team.getMembers().add(member); // flush, clear 안하고 관계 조회할때는 꼭필요 + 객체지향적 설계
+//            em.flush();
+//            em.clear();
 //
-            em.flush();
-            em.clear();
-
-            Member findMember = em.find(Member.class, member.getId());
-            List<Member> members = findMember.getTeam().getMembers();
-
-            for (Member m : members){
-                System.out.println("m = " + m.getUsername());
-            }
+//            Movie findMovie = em.find(Movie.class, movie.getId());
+//            System.out.println("findMovie = "+ findMovie );
 
             System.out.println("==========");
 
             tx.commit(); // DB에 쿼리가 날라가는 순간
         }catch (Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
             tx.rollback();
         } finally {
             em.close();
