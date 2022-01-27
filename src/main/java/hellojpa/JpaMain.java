@@ -19,11 +19,13 @@ public class JpaMain {
         //code
         try {
 
-//            Movie movie = new Movie();
-//            movie.setDirector("A");
-//            movie.setActor("BBB");
-//            movie.setName("바함사");
-//            movie.setPrice(10000);
+            Movie movie = new Movie();
+            movie.setDirector("A");
+            movie.setActor("BBB");
+            movie.setName("바함사");
+            movie.setPrice(10000);
+            em.persist(movie);
+            em.flush();
 
 //            Movie findMovie = em.find(Movie.class, movie.getId());
 //            System.out.println("findMovie = "+ findMovie );

@@ -4,8 +4,8 @@ import javax.persistence.*;
 
 @Entity
 // JOIN : 조인전략, SINGLE_TABLE: 싱글테이블,
-@Inheritance(strategy =  InheritanceType.TABLE_PER_CLASS)
-@DiscriminatorColumn // DTYPE : 조인전략에서는 써줘야함, 단일테이블에서는 알아서 생성
+@Inheritance(strategy =  InheritanceType.SINGLE_TABLE)
+//@DiscriminatorColumn // DTYPE : 조인전략에서는 써줘야함, 단일테이블에서는 알아서 생성
 public abstract class Item {
 
     @Id @GeneratedValue
