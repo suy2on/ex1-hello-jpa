@@ -22,7 +22,7 @@ public class Member extends BaseEntity {
 //    @Column(name = "TEAM_ID")
 //    private Long teamId;
 
-    @ManyToOne // 다대일(member관점)
+    @ManyToOne(fetch = FetchType.EAGER) // 다대일(member관점) + 프록시객체로 조회
     @JoinColumn(name= "TEAM_ID") // FK는 뭔지
     private Team team;
 
