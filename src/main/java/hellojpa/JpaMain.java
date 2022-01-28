@@ -18,6 +18,13 @@ public class JpaMain {
         tx.begin();
         //code
         try {
+            Member member = new Member();
+            member.setUsername("hi");
+            member.setHomeAddress(new Address("city", "street", "zipcode"));
+            member.setPeriod(new Period(LocalDateTime.now(), LocalDateTime.now()));
+            em.persist(member);
+
+
             Child child1 = new Child();
             Child child2 = new Child();
 
@@ -33,7 +40,7 @@ public class JpaMain {
             em.clear();
 
             // orphanRemoval : 하나만 연관되어있을 때만 사용 , 고아가 된 자식객체 삭제
-            // CASCADE : 부모가 삭제되면 같이 삭제 , 관계가 끊어지는 것으로는 삭제 안된다 
+            // CASCADE : 부모가 삭제되면 같이 삭제 , 관계가 끊어지는 것으로는 삭제 안된다
             Parent findParent = em.find(Parent.class, parent.getId());
             em.remove(findParent);
 

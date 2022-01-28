@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity // JPA가 인식
 //@SequenceGenerator(name = "member_seq_generator", sequenceName = "member_seq")
-public class Member extends BaseEntity {
+public class Member {
     @Id // 직접할당
     //@GeneratedValue(strategy = GenerationType.IDENTITY) // DB에 pk설정 위임, DB에 들어갈때 pk결정 따라서 
     // @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_seq_generator")
@@ -37,19 +37,24 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member")
     private List<MemberProduct> memberProducts = new ArrayList<>();
 
-//    private Integer age;
-//
-//    @Enumerated(EnumType.STRING) // enum대신 : STRING써야 순서에 제약받지 않음
-//    private RoleType roleType;
-//
-//    @Temporal(TemporalType.TIMESTAMP) // Time, Date, TimeStamp
-//    private Date createdDate;
-//
-//    @Temporal(TemporalType.TIMESTAMP)
-//    private Date lastModifiedDate;
-//
-//    @Lob // 큰 컨텐츠
-//    private String description;
+    //period
+    @Embedded
+    private Period period;
+
+    //address
+    @Embedded
+    private Address workAddress;
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name="city",
+                    column = @Column(name = "HOME_CITY")),
+            @AttributeOverride(name="street",
+                    column = @Column(name = "HOME_STREET")),
+            @AttributeOverride(name = "zipcode",
+                    column = @Column(name = "HOME_ZIPCODE"))
+    })
+    private Address homeAddress;
 
 
 
@@ -57,6 +62,15 @@ public class Member extends BaseEntity {
     public Member() {
 
     }
+
+    public void setHomeAddress(Address address){
+        this.workAddress = address;
+    }
+
+    public void setPeriod(Period period){
+        this.period = period;
+    }
+
 
     public Long getId() {
         return id;
