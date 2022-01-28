@@ -18,34 +18,54 @@ public class JpaMain {
         tx.begin();
         //code
         try {
+            Child child1 = new Child();
+            Child child2 = new Child();
 
-            Member member = new Member();
-            member.setUsername("a");
+            Parent parent = new Parent();
+            parent.addChild(child1);
+            parent.addChild(child2);
 
-
-            Team team = new Team();
-            team.setName("b");
-            member.setTeam(team);
-
-
-
-            em.persist(member);
-            em.persist(team);
-
-
-
+            em.persist(parent);
+            // CASCADE : 연관된 엔티티 같이 영속화 (하나의 객체와 연관있을 때만 사용)
+//            em.persist(child1);
+//            em.persist(child2);
             em.flush();
             em.clear();
 
-            //jpa 촤적화 -> 조인 
+            // orphanRemoval : 하나만 연관되어있을 때만 사용 , 고아가 된 자식객체 삭제
+            // CASCADE : 부모가 삭제되면 같이 삭제 , 관계가 끊어지는 것으로는 삭제 안된다 
+            Parent findParent = em.find(Parent.class, parent.getId());
+            em.remove(findParent);
+
+
+
+//            Member member = new Member();
+//            member.setUsername("a");
+//
+//
+//            Team team = new Team();
+//            team.setName("b");
+//            member.setTeam(team);
+//
+//
+//
+//            em.persist(member);
+//            em.persist(team);
+//
+//
+//
+//            em.flush();
+//            em.clear();
+
+            //jpa 촤적화 -> 조인
 //            Member findMember = em.find(Member.class, member.getId()); // team이랑 조인하지않음 / 즉시로딩이면 조인하고 team select은 안날림
 //            System.out.println("member = " + findMember.getClass()); // 멤버객체
 //            System.out.println("team = " + findMember.getTeam().getClass()); // 프록시객체
 //            System.out.println("team = " + findMember.getTeam().getName()); // 초기화하면서 select문날림
 
-
-            List<Member> members = em.createQuery("select m from Member m", Member.class).getResultList();
-            System.out.println(members); // 즉시면 member 날리고 팀날림  / 지연이면 member만 날림
+//
+//            List<Member> members = em.createQuery("select m from Member m", Member.class).getResultList();
+//            System.out.println(members); // 즉시면 member 날리고 팀날림  / 지연이면 member만 날림
 
 
 
@@ -103,7 +123,7 @@ public class JpaMain {
 
             tx.commit(); // DB에 쿼리가 날라가는 순간
         }catch (Exception e){
-            //e.printStackTrace();
+            e.printStackTrace();
             tx.rollback();
         } finally {
             em.close();
