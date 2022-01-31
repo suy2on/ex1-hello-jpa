@@ -1,11 +1,13 @@
 package hellojpa;
 
+
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import javax.swing.plaf.metal.MetalMenuBarUI;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -18,105 +20,40 @@ public class JpaMain {
         tx.begin();
         //code
         try {
+
+
             Member member = new Member();
             member.setUsername("hi");
             member.setHomeAddress(new Address("city", "street", "zipcode"));
-            member.setPeriod(new Period(LocalDateTime.now(), LocalDateTime.now()));
+
+            member.getFavoriteFoods().add("치킨");
+            member.getFavoriteFoods().add("회");
+            member.getFavoriteFoods().add("피자");
+
+            member.getAddressHistory().add(new AddressEntity("city1", "street1", "zipcode1"));
+            member.getAddressHistory().add(new AddressEntity("city2", "street2", "zipcode2"));
+
             em.persist(member);
 
-
-            Child child1 = new Child();
-            Child child2 = new Child();
-
-            Parent parent = new Parent();
-            parent.addChild(child1);
-            parent.addChild(child2);
-
-            em.persist(parent);
-            // CASCADE : 연관된 엔티티 같이 영속화 (하나의 객체와 연관있을 때만 사용)
-//            em.persist(child1);
-//            em.persist(child2);
             em.flush();
             em.clear();
 
-            // orphanRemoval : 하나만 연관되어있을 때만 사용 , 고아가 된 자식객체 삭제
-            // CASCADE : 부모가 삭제되면 같이 삭제 , 관계가 끊어지는 것으로는 삭제 안된다
-            Parent findParent = em.find(Parent.class, parent.getId());
-            em.remove(findParent);
+            System.out.println("-----------------start-----------------");
+            Member findmember = em.find(Member.class, member.getId()); // element collection은 지연로딩
+
+            Address add = member.getHomeAddress(); // 완전히 교체
+            findmember.setHomeAddress(new Address("newcity", add.getStreet(), add.getZipcode()));
+
+            //String(기본)값타입 : 단지 set이여서 최적화 되었음
+            findmember.getFavoriteFoods().remove("치킨");
+            findmember.getFavoriteFoods().add("한식");
+
+            //Address(복합)값타입 -> 지우면 관련 객체 다 지우고 다시 추가
+//            findmember.getAddressHistory().remove(new Address("city1", "street1", "zipcode1"));
+//            findmember.getAddressHistory().add(new Address("city3", "street3", "zipcode3"));
 
 
-
-//            Member member = new Member();
-//            member.setUsername("a");
-//
-//
-//            Team team = new Team();
-//            team.setName("b");
-//            member.setTeam(team);
-//
-//
-//
-//            em.persist(member);
-//            em.persist(team);
-//
-//
-//
-//            em.flush();
-//            em.clear();
-
-            //jpa 촤적화 -> 조인
-//            Member findMember = em.find(Member.class, member.getId()); // team이랑 조인하지않음 / 즉시로딩이면 조인하고 team select은 안날림
-//            System.out.println("member = " + findMember.getClass()); // 멤버객체
-//            System.out.println("team = " + findMember.getTeam().getClass()); // 프록시객체
-//            System.out.println("team = " + findMember.getTeam().getName()); // 초기화하면서 select문날림
-
-//
-//            List<Member> members = em.createQuery("select m from Member m", Member.class).getResultList();
-//            System.out.println(members); // 즉시면 member 날리고 팀날림  / 지연이면 member만 날림
-
-
-
-//            System.out.println("===========");
-//            findMember.getTeam().getName(); // 초기화
-//            System.out.println("===========");
-
-
-
-
-
-//            Movie findMovie = em.find(Movie.class, movie.getId());
-//            System.out.println("findMovie = "+ findMovie );
-
-//            Member member = new Member();
-//            member.setUsername("A");
-//            member.setCreatedBy("B");
-//            member.setCreatedDate(LocalDateTime.now());
-//            Member member2 = new Member();
-//            member2.setUsername("B");
-//
-//            em.persist(member);
-//            em.persist(member2);
-//
-//            em.flush();
-//            em.clear();
-
-//            Member findMember2 = em.find(Member.class, member2.getId());
-
-            // 프록시객체 : 실제 클래스와 겉모양이 같음
-//            Member findMember = em.getReference(Member.class, member.getId()); // 홀로는 쿼리 안날림
-
-
-//            System.out.println("findMember = " + findMember.getClass());
-//            System.out.println("findMember.getId = " + findMember.getId());
-//
-//            //Hibernate.initialize(findMember); 강제 초기화 가능
-//
-//            // 쓰일 때 쿼리날림 (초기화)
-//            System.out.println("findMember.getUsername = " + findMember.getUsername());
-//            // 초기화 되서 초기화 요청 안함
-//            System.out.println("findMember.getUsername = " + findMember.getUsername());
-
-//            // == 은 모든것을 다 비교
+//            // == 은 참조값을 비교
 //            System.out.println("m1 == m2 :" + (findMember.getClass() == findMember2.getClass()));
 //
 //            // 타입 비교시에는 instancOf
