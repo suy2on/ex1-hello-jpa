@@ -26,32 +26,6 @@ public class JpaMain {
             member.setUsername("hi");
             member.setHomeAddress(new Address("city", "street", "zipcode"));
 
-            member.getFavoriteFoods().add("치킨");
-            member.getFavoriteFoods().add("회");
-            member.getFavoriteFoods().add("피자");
-
-            member.getAddressHistory().add(new AddressEntity("city1", "street1", "zipcode1"));
-            member.getAddressHistory().add(new AddressEntity("city2", "street2", "zipcode2"));
-
-            em.persist(member);
-
-            em.flush();
-            em.clear();
-
-            System.out.println("-----------------start-----------------");
-            Member findmember = em.find(Member.class, member.getId()); // element collection은 지연로딩
-
-            Address add = member.getHomeAddress(); // 완전히 교체
-            findmember.setHomeAddress(new Address("newcity", add.getStreet(), add.getZipcode()));
-
-            //String(기본)값타입 : 단지 set이여서 최적화 되었음
-            findmember.getFavoriteFoods().remove("치킨");
-            findmember.getFavoriteFoods().add("한식");
-
-            //Address(복합)값타입 -> 지우면 관련 객체 다 지우고 다시 추가
-//            findmember.getAddressHistory().remove(new Address("city1", "street1", "zipcode1"));
-//            findmember.getAddressHistory().add(new Address("city3", "street3", "zipcode3"));
-
 
 //            // == 은 참조값을 비교
 //            System.out.println("m1 == m2 :" + (findMember.getClass() == findMember2.getClass()));
